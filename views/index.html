@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Pokemon List</title>
+        <style>
+            body {
+                font-family: "Arial", sans-serif;
+                background-color: #f0f0f0;
+                margin: 0;
+                padding: 20px;
+            }
+
+            h1,
+            h2 {
+                text-align: center;
+                color: #e60012;
+                margin-bottom: 20px;
+            }
+
+            #pokemon-list {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+            }
+
+            .pokemon-card {
+                background-color: #fff;
+                border: 1px solid #e60012;
+                border-radius: 12px;
+                overflow: hidden;
+                transition: transform 0.2s;
+                cursor: pointer;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .pokemon-card:hover {
+                transform: scale(1.05);
+            }
+
+            .pokemon-card img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                border-bottom: 1px solid #e60012;
+                border-radius: 12px 12px 0 0;
+            }
+
+            .pokemon-card-content {
+                padding: 15px;
+                text-align: center;
+            }
+
+            .pokemon-name {
+                font-size: 1.2em;
+                color: #e60012;
+                font-family: "Pokemon Solid", sans-serif;
+            }
+
+            /* Modal styles */
+            .modal {
+                display: none;
+                position: fixed;
+                z-index: 1;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                overflow: auto;
+                background-color: rgba(0, 0, 0, 0.7);
+            }
+
+            .modal-content {
+                background-color: #fff;
+                margin: 5% auto;
+                padding: 20px;
+                border: 1px solid #e60012;
+                width: 80%;
+                max-width: 400px;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            }
+
+            .close {
+                color: #e60012;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .close:hover {
+                color: #fff;
+            }
+
+            #modal-content-container {
+                text-align: center;
+            }
+
+            #modal-content-container img {
+                max-width: 50%;
+                height: auto;
+                border-radius: 8px;
+                margin-bottom: 20px;
+            }
+
+            #modal-content-container h2 {
+                color: #e60012;
+                font-family: "Pokemon Solid", sans-serif;
+                margin-bottom: 10px;
+            }
+
+            #modal-content-container p {
+                color: #333;
+                margin-bottom: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <h1>Pokedex</h1>
+        <h2>Gotta Catch 'Em All</h2>
+
+        <div id="pokemon-list">
+            <!-- Daftar Pokemon akan ditampilkan di sini -->
+        </div>
+
+        <!-- Modal -->
+        <div id="pokemon-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <div id="modal-content-container"></div>
+            </div>
+        </div>
+
+        <script>
+            fetch("http://localhost:8080/pokemon")
+                .then((response) => response.json())
+                .then((data) => {
+                    const pokemonListContainer =
+                        document.getElementById("pokemon-list");
+
+                    data.forEach((pokemon) => {
+                        const pokemonCard = document.createElement("div");
+                        pokemonCard.className = "pokemon-card";
+
+                        const pokemonImage = document.createElement("img");
+                        pokemonImage.src = pokemon.image;
+                        pokemonImage.alt = pokemon.name;
+
+                        pokemonImage.addEventListener("click", () =>
+                            showModal(pokemon)
+                        );
+
+                        const pokemonCardContent =
+                            document.createElement("div");
+                        pokemonCardContent.className = "pokemon-card-content";
+
+                        const pokemonName = document.createElement("div");
+                        pokemonName.className = "pokemon-name";
+                        pokemonName.textContent = pokemon.name;
+
+                        pokemonCardContent.appendChild(pokemonName);
+
+                        pokemonCard.appendChild(pokemonImage);
+                        pokemonCard.appendChild(pokemonCardContent);
+
+                        pokemonListContainer.appendChild(pokemonCard);
+                    });
+                })
+                .catch((error) =>
+                    console.error("Error fetching Pokemon data:", error)
+                );
+
+            const showModal = (pokemon) => {
+                const modalContentContainer = document.getElementById(
+                    "modal-content-container"
+                );
+                modalContentContainer.innerHTML = `
+                <img src="${pokemon.image}" alt="${pokemon.name}">
+                <h2>${pokemon.name}</h2>
+                <p>Type: ${pokemon.type1}${
+                    pokemon.type2 ? ", " + pokemon.type2 : ""
+                }</p>
+                <p>Species: ${pokemon.species}</p>
+                <p>Ability: ${pokemon.ability}</p>
+                <p>Total Base Stat: ${pokemon.totalBaseStat}</p>
+            `;
+                document.getElementById("pokemon-modal").style.display =
+                    "block";
+            };
+
+            const closeModal = () => {
+                document.getElementById("pokemon-modal").style.display = "none";
+            };
+
+            window.onclick = (event) => {
+                const modal = document.getElementById("pokemon-modal");
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+        </script>
+    </body>
+</html>
