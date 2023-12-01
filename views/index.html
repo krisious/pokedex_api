@@ -41,7 +41,7 @@
 
             .pokemon-card img {
                 width: 100%;
-                height: 100%;
+                height: 80%;
                 object-fit: cover;
                 border-bottom: 1px solid #e60012;
                 border-radius: 12px 12px 0 0;
@@ -50,11 +50,12 @@
             .pokemon-card-content {
                 padding: 15px;
                 text-align: center;
+                background-color: #e60012;
             }
 
             .pokemon-name {
                 font-size: 1.2em;
-                color: #e60012;
+                color: white;
                 font-family: "Pokemon Solid", sans-serif;
             }
 
@@ -138,20 +139,23 @@
             fetch("http://localhost:8080/pokemon")
                 .then((response) => response.json())
                 .then((data) => {
+                    data.sort((a, b) => a.pokedexNumber - b.pokedexNumber);
+
                     const pokemonListContainer =
                         document.getElementById("pokemon-list");
 
                     data.forEach((pokemon) => {
                         const pokemonCard = document.createElement("div");
                         pokemonCard.className = "pokemon-card";
-
+                        
+                        pokemonCard.addEventListener("click", () =>
+                            showModal(pokemon)
+                        );
+                        
                         const pokemonImage = document.createElement("img");
                         pokemonImage.src = pokemon.image;
                         pokemonImage.alt = pokemon.name;
 
-                        pokemonImage.addEventListener("click", () =>
-                            showModal(pokemon)
-                        );
 
                         const pokemonCardContent =
                             document.createElement("div");

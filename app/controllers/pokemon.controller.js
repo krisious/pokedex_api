@@ -10,11 +10,9 @@ exports.create = async (req, res) => {
 
         // Jika sudah ada, kirim respons dengan pesan kesalahan
         if (existingPokemon) {
-            return res
-                .status(400)
-                .send({
-                    message: `Pokemon with pokedexNumber ${req.body.pokedexNumber} already exists.`,
-                });
+            return res.status(400).send({
+                message: `Pokemon with pokedexNumber ${req.body.pokedexNumber} already exists.`,
+            });
         }
 
         // Jika belum ada, buat Pokemon baru
@@ -50,6 +48,20 @@ exports.find = (req, res) => {
     const id = req.params.id;
 
     Pokemon.findById(id)
+        .then((data) => {
+            if (!data) {
+                res.status(404).send({ message: "Pokemon not found." });
+            } else {
+                res.send(data);
+            }
+        })
+        .catch((err) => res.status(500).send({ message: err.message }));
+};
+
+exports.findByName = (req, res) => {
+    const name = req.params.name;
+
+    Pokemon.find({ name: name })
         .then((data) => {
             if (!data) {
                 res.status(404).send({ message: "Pokemon not found." });

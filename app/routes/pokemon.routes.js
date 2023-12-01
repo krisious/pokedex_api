@@ -4,6 +4,7 @@ module.exports = (app) => {
 
     routes.get("/", pokemon.getAll);
     routes.get("/:id", pokemon.find);
+    routes.get("/name/:name", pokemon.findByName);
     routes.post("/", pokemon.create);
     routes.put("/:id", pokemon.update);
     routes.delete("/:id", pokemon.delete);
