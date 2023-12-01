@@ -1,0 +1,31 @@
+# Ignore vendor directories
+/vendor/
+
+# Ignore logs
+/log/
+
+# Ignore cache files
+/cache/
+
+# Ignore database files
+/database/
+
+# Ignore environment configuration
+/.env
+
+# Ignore IDE specific files
+.idea/
+.vscode/
+
+# Ignore compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Ignore build artifacts
+/build/
+/dist/
+
+# Ignore dependencies
+/node_modules/
