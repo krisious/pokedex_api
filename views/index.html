@@ -116,6 +116,22 @@
                 color: #333;
                 margin-bottom: 8px;
             }
+
+            .types-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                margin-bottom: 10px;
+            }
+
+            .type {
+                padding: 10px;
+                margin: 0 5px;
+                border-radius: 5px;
+                color: white !important;
+                font-size: 1em;
+                font-weight: bold;
+            }
         </style>
     </head>
 
@@ -147,15 +163,14 @@
                     data.forEach((pokemon) => {
                         const pokemonCard = document.createElement("div");
                         pokemonCard.className = "pokemon-card";
-                        
+
                         pokemonCard.addEventListener("click", () =>
                             showModal(pokemon)
                         );
-                        
+
                         const pokemonImage = document.createElement("img");
                         pokemonImage.src = pokemon.image;
                         pokemonImage.alt = pokemon.name;
-
 
                         const pokemonCardContent =
                             document.createElement("div");
@@ -181,16 +196,51 @@
                 const modalContentContainer = document.getElementById(
                     "modal-content-container"
                 );
+
+                const typeColors = {
+                    Grass: "#78C850",
+                    Fire: "#F08030",
+                    Water: "#6890F0",
+                    Bug: "#A8B820",
+                    Normal: "#A8A878",
+                    Electric: "#F8D030",
+                    Ground: "#E0C068",
+                    Ice: "#98D8D8",
+                    Fighting: "#C03028",
+                    Poison: "#A040A0",
+                    Flying: "#A890F0",
+                    Rock: "#B8A038",
+                    Ghost: "#705898",
+                    Steel: "#B8B8D0",
+                    Psychic: "#F85888",
+                    Dark: "#705848",
+                    Fairy: "#EE99AC",
+                    Dragon: "#7038F8",
+                };
+
+                const backgroundColorType1 =
+                    typeColors[pokemon.type1] || "#888";
+                const backgroundColorType2 =
+                    typeColors[pokemon.type2] || "#888";
+
                 modalContentContainer.innerHTML = `
-                <img src="${pokemon.image}" alt="${pokemon.name}">
-                <h2>${pokemon.name}</h2>
-                <p>Type: ${pokemon.type1}${
-                    pokemon.type2 ? ", " + pokemon.type2 : ""
+                    <img src="${pokemon.image}" alt="${pokemon.name}">
+                    <h2>${pokemon.name}</h2>
+                    <div class="types-container">
+                        <p class="type" style="background-color: ${backgroundColorType1};">${
+                    pokemon.type1
                 }</p>
-                <p>Species: ${pokemon.species}</p>
-                <p>Ability: ${pokemon.ability}</p>
-                <p>Total Base Stat: ${pokemon.totalBaseStat}</p>
-            `;
+                        ${
+                            pokemon.type2
+                                ? `<p class="type" style="background-color: ${backgroundColorType2};">${pokemon.type2}</p>`
+                                : ""
+                        }
+                    </div>
+                    <p>Species: ${pokemon.species}</p>
+                    <p>Ability: ${pokemon.ability}</p>
+                    <p>Total Base Stat: ${pokemon.totalBaseStat}</p>
+                `;
+
                 document.getElementById("pokemon-modal").style.display =
                     "block";
             };

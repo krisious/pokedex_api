@@ -39,63 +39,92 @@ exports.create = async (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-    Pokemon.find()
-        .then((data) => res.send(data))
-        .catch((err) => res.status(500).send({ message: err.message }));
+    try {
+        const name = req.query.name;
+        let condition = name
+            ? { name: { $regex: new RegExp(name), $options: "i" } }
+            : {};
+
+        Pokemon.find(condition)
+            .then((data) => res.send(data))
+            .catch((err) => res.status(500).send({ message: err.message }));
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
 
 exports.find = (req, res) => {
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
 
-    Pokemon.findById(id)
-        .then((data) => {
-            if (!data) {
-                res.status(404).send({ message: "Pokemon not found." });
-            } else {
-                res.send(data);
-            }
-        })
-        .catch((err) => res.status(500).send({ message: err.message }));
+        Pokemon.findById(id)
+            .then((data) => {
+                if (!data) {
+                    res.status(404).send({ message: "Pokemon not found." });
+                } else {
+                    res.send(data);
+                }
+            })
+            .catch((err) => res.status(500).send({ message: err.message }));
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
 
 exports.findByName = (req, res) => {
-    const name = req.params.name;
+    try {
+        const name = req.params.name;
 
-    Pokemon.find({ name: name })
-        .then((data) => {
-            if (!data) {
-                res.status(404).send({ message: "Pokemon not found." });
-            } else {
-                res.send(data);
-            }
-        })
-        .catch((err) => res.status(500).send({ message: err.message }));
+        Pokemon.find({ name: name })
+            .then((data) => {
+                if (!data) {
+                    res.status(404).send({ message: "Pokemon not found." });
+                } else {
+                    res.send(data);
+                }
+            })
+            .catch((err) => res.status(500).send({ message: err.message }));
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
 
 exports.update = (req, res) => {
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
+        const updatedData = req.body;
 
-    Pokemon.findByIdAndUpdate(id, req.body)
-        .then((data) => {
-            if (!data) {
-                res.status(404).send({ message: "Pokemon not found." });
-            } else {
-                res.send({ message: "Pokemon updated successfully." });
-            }
-        })
-        .catch((err) => res.status(500).send({ message: err.message }));
+        Pokemon.findByIdAndUpdate(id, updatedData, { new: true })
+            .then((data) => {
+                if (!data) {
+                    res.status(404).send({ message: "Pokemon not found." });
+                } else {
+                    res.send({
+                        message: "Pokemon updated successfully.",
+                        data,
+                    });
+                }
+            })
+            .catch((err) => res.status(500).send({ message: err.message }));
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
 
 exports.delete = (req, res) => {
-    const id = req.params.id;
+    try {
+        const id = req.params.id;
 
-    Pokemon.findByIdAndDelete(id)
-        .then((data) => {
-            if (!data) {
-                res.status(404).send({ message: "Pokemon not found." });
-            } else {
-                res.send({ message: "Pokemon deleted successfully." });
-            }
-        })
-        .catch((err) => res.status(500).send({ message: err.message }));
+        Pokemon.findByIdAndDelete(id)
+            .then((data) => {
+                if (!data) {
+                    res.status(404).send({ message: "Pokemon not found." });
+                } else {
+                    res.send({ message: "Pokemon deleted successfully." });
+                }
+            })
+            .catch((err) => res.status(500).send({ message: err.message }));
+    } catch (err) {
+        res.status(500).send({ message: err.message });
+    }
 };
